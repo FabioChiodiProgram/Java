@@ -1,0 +1,142 @@
+import java.util.*;
+
+public class Main {
+	
+	private static final boolean Vincitore = false;
+	static char grigliaDiGioco[][] ;
+	private static Scanner tastiera;
+
+	public static void main(String[] args) {
+
+		System.out.println("Benvenuti al gioco del tris. Iniziamo!!!");
+		
+		//creazione di una matrice 3x3 e visualizzazione della griglia
+		grigliaDiGioco = new char[3][3];
+		int x = 0;
+		int y = 0;
+		boolean finePartita=false;
+		char turno='X';
+		int mosseInserite=0;
+		
+
+		//inizializzazione griglia
+		for(x=0; x<=2; x=x+1){
+
+			for(y=0; y<=2; y=y+1) {
+				grigliaDiGioco[x][y]='_';
+			}
+
+		}
+
+		//stampa griglia 
+		stampaGriglia();
+
+
+		while (finePartita==false)
+		{
+			//input giocatori
+			System.out.println("Tocca al giocatore "+turno+"!!!");
+			tastiera = new Scanner(System.in);
+			System.out.print("Casella (da 1 a 9): ");
+			int mossa = tastiera.nextInt();
+
+			//controllo numeri inseriti dall'utente
+			boolean b= numConsentito(mossa);
+
+			if(b==false){
+				continue;
+			}
+
+			//aggiorno griglia di gioco
+			mossa--;			
+			int riga, colonna;
+			riga= mossa/3;
+			colonna= mossa%3;			
+			grigliaDiGioco[riga][colonna]=turno;			
+			mosseInserite++;
+			
+			//mostro griglia a schermo
+			stampaGriglia();
+			
+			//controllo se c'è stata una vincita
+			if(Controllovittoria(grigliaDiGioco, turno)){
+				System.out.println("Il vincitore è: " + turno);
+				
+				break;
+			}
+			
+			//controllo se c'è stata una una parità
+			if(mosseInserite == 9){
+				System.out.println("Parità!!!");
+				break;
+			}
+
+			//cambio turno
+			if(turno=='X')
+				turno='O';
+			else
+				turno='X';
+		}
+		
+		//fine partita
+		System.out.println("Fine partita! A presto");
+
+	}
+
+	private static boolean numConsentito(int mossa) {
+
+		//verifica dei numeri
+		if (mossa < 1 || mossa > 9)
+		{
+			System.out.println("il valore non e' valido! Riprova");
+			return false;
+		}
+		
+		//aggiorno griglia di gioco
+		mossa--;
+		
+		int riga, colonna;
+		riga= mossa/3;
+		colonna= mossa%3;
+				
+		if(grigliaDiGioco[riga][colonna]!= '_'){ 
+			
+			System.out.println("La cella e' gia occupata! Riprova");
+			return false;
+		}
+		
+		return true;		
+	}
+	// funzione per stampare la griglia di gioco
+	private static void stampaGriglia() {
+		for(int x=0; x<=2; x=x+1) {
+			for(int y=0; y<=2; y=y+1) {
+				System.out.print(grigliaDiGioco[x][y]+" ");
+			}
+
+			System.out.println("");
+		}
+	}
+	private static boolean Controllovittoria(final char[][] grigliaDiGioco, final char j) {
+		
+		boolean ris=false;
+		
+		// controlla tutte le righe
+		for (int i=0; i<3; i++)
+			if ( grigliaDiGioco[i][0]==j && grigliaDiGioco[i][1]==j && grigliaDiGioco[i][2]==j)
+				ris = true;
+		
+		// controlla tutte le colonne
+		for (int i=0; i<3; i++)
+			if ( grigliaDiGioco[0][i]==j && grigliaDiGioco[1][i]==j && grigliaDiGioco[2][i]==j)
+				ris = true;
+		
+		// controlla le diagonali
+		if ( grigliaDiGioco[0][0]==j && grigliaDiGioco[1][1]==j && grigliaDiGioco[2][2]==j)
+			ris = true;
+		if ( grigliaDiGioco[0][2]==j && grigliaDiGioco[1][1]==j && grigliaDiGioco[2][0]==j)
+			ris = true;
+		
+		return ris;
+	}
+}	
